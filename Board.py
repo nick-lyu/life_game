@@ -1,7 +1,7 @@
 from Cell import Cell
 
 
-class Game:
+class Board:
 
     def __init__(self, n, m, rnd=False):
         if rnd:
@@ -34,17 +34,25 @@ class Game:
         return alive_neighbors_board
 
     def get_alive_neighbors(self, x, y):
+        x_values, y_values = self.get_coord_ranges(x, y)
+        # print(f"COORDS: {x}, {y}\n{x_values} --- {y_values}")
 
         alive_count = 0
-
-        for i in range(x-1, x+2):
-            for j in range(y-1, y+2):
+        for i in x_values:
+            for j in y_values:
                 if not (i == x and j == y):
                     current_cell = self.current_board[i][j]
                     if current_cell.alive:
                         alive_count += 1
         return alive_count
 
-    def normalize_ranges(self, x, y):
-        if x == len(self.current_board) - 1:
-            a = 0
+    def get_coord_ranges(self, x, y):
+        x_result = list(range(x-1, x+2))
+        y_result = list(range(y-1, y+2))
+
+        if x_result[-1] == len(self.current_board):
+            x_result[-1] = 0
+        if y_result[-1] == len(self.current_board[x]):
+            y_result[-1] = 0
+
+        return x_result, y_result
